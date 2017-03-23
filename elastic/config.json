@@ -1,9 +1,5 @@
 {
     "domains" : {
-        "_timestamp" : {
-	    "enabled" : true,
-	    "store" : true
-	},
 	"properties" : {
             "domain_name" : {
 		"type" : "string"

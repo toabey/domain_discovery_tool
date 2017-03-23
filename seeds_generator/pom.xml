@@ -4,7 +4,7 @@
   <groupId>page_downloader</groupId>
   <artifactId>seeds_generator</artifactId>
   <packaging>jar</packaging>
-  <version>1.0-SNAPSHOT</version>
+  <version>1.0-SNAPSHOT-jar-with-dependencies</version>
   <name>seeds_generator</name>
   <url>http://maven.apache.org</url>
   <dependencies>
@@ -42,20 +42,36 @@
     <dependency>
       <groupId>org.elasticsearch</groupId>
       <artifactId>elasticsearch</artifactId>
-      <version>1.5.2</version>
+      <version>2.4.4</version>
     </dependency>
   </dependencies>
   <build>
     <plugins>
       <plugin>
-        <artifactId>maven-assembly-plugin</artifactId>
-        <version>2.5.4</version>
-        <configuration>
-          <descriptorRefs>
-            <descriptorRef>jar-with-dependencies</descriptorRef>
+	<groupId>org.apache.maven.plugins</groupId>
+	<artifactId>maven-shade-plugin</artifactId>
+	<version>2.4.1</version>
+	<configuration>
+	  <descriptorRefs>
+	    <descriptorRef>jar-with-dependencies</descriptorRef>
           </descriptorRefs>
         </configuration>
+	<executions>
+          <!-- Run shade goal on package phase -->
+          <execution>
+            <phase>package</phase>
+            <goals>
+              <goal>shade</goal>
+            </goals>
+	    <configuration>
+              <transformers>
+		<!-- add Main-Class to manifest file -->
+		<transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
+              </transformers>
+	    </configuration>
+          </execution>
+	</executions>
       </plugin>
-    </plugins>
+</plugins>
   </build>
 </project>

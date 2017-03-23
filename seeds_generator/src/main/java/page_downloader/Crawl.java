@@ -3,10 +3,11 @@ import java.util.concurrent.ExecutorService;
 import java.io.FileReader;
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.net.InetAddress;
 import java.lang.InterruptedException;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
-import org.elasticsearch.client.transport.TransportClient;
+import org.elasticsearch.client.transport.TransportClient.Builder;
 import org.elasticsearch.common.transport.InetSocketTransportAddress;
 import org.elasticsearch.client.Client;
 import java.util.ArrayList;
@@ -18,8 +19,7 @@ import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.action.search.SearchType;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.index.query.QueryBuilder;
-import org.elasticsearch.index.query.MissingFilterBuilder;
-import org.elasticsearch.index.query.FilterBuilders;
+import org.elasticsearch.index.query.MissingQueryBuilder;
 import org.elasticsearch.action.index.IndexRequest;
 import org.elasticsearch.action.update.UpdateRequest;
 
@@ -50,12 +50,19 @@ public class Crawl {
 
 	this.es_host = es_host;
 
-	this.client = new TransportClient().addTransportAddress(new InetSocketTransportAddress(es_host, 9300));
+	try{
+  this.client = new Builder().build().
+    addTransportAddress(new InetSocketTransportAddress(InetAddress.getByName(es_host), 9300));
+
 	
 	if(!es_index.isEmpty())
 	    this.es_index = es_index;
 	if(!es_doc_type.isEmpty())
 	    this.es_doc_type = es_doc_type;
+	    }catch (Exception e) {
+	    // TODO Auto-generated catch block
+	    e.printStackTrace();
+	}
 	
     }
 
@@ -97,8 +104,7 @@ public class Crawl {
 
     public void addBackwardCrawlTask(ArrayList<String> urls, String top){
 	try{
-	    MissingFilterBuilder filter=FilterBuilders.missingFilter("crawled_backward");
-	    QueryBuilder qb = QueryBuilders.filteredQuery(QueryBuilders.matchAllQuery(),filter);
+	    MissingQueryBuilder qb = new MissingQueryBuilder("crawled_backward");
 	    SearchResponse searchResponse = client.prepareSearch(this.es_index)
 		.setTypes(this.es_doc_type)
 		.setSearchType(SearchType.DFS_QUERY_THEN_FETCH)

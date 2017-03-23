@@ -4,12 +4,19 @@ public class Download_urls {
     
     public void download(String[] urls, String es_index, String es_doc_type, String es_server){
 	Download download = new Download("uploaded", es_index, es_doc_type, es_server);
-	
+
+	try
+	{
 	for(String url: urls){
 	    download.addTask(Download_Utils.validate_url(url));
 	}
-	
+	}
+	finally
+	{
 	download.shutdown();
+	}
+	
+
     }
 
     public static void main(String[] args) {

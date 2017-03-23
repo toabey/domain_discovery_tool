@@ -24,10 +24,8 @@ import org.elasticsearch.action.search.SearchType;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.action.update.UpdateRequest;
-import org.elasticsearch.index.query.MissingFilterBuilder;
-import org.elasticsearch.index.query.FilterBuilders;
-import org.elasticsearch.search.SearchHit; 
-import org.elasticsearch.search.SearchHits; 
+import org.elasticsearch.search.SearchHit;
+import org.elasticsearch.search.SearchHits;
 
 public class CrawlerInterface implements Runnable{
     private static final Pattern linkPattern = Pattern.compile("\\s*(?i)href\\s*=\\s*(\"([^\"]*\")|'[^']*'|([^'\">\\s]+))",  Pattern.CASE_INSENSITIVE|Pattern.DOTALL);
